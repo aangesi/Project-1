@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html>
+
+<body>
+
+  <p>Перед скриптом...</p>
+
+  <script>
+   
+  </script>
+
+  <p>...После скрипта.</p>
+
+</body>
+
+</html>
