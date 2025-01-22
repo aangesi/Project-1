@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+
+<body>
+
+  <p>Перед скриптом...</p>
+
+  <script>
+function countLettersInNumberWord(number) {
+    const numberWords = {
+        9: "девять",
+        22: "двадцать два",
+        26: "двадцать шесть"
+    };
+    
+    // Преобразуем число в строку и считаем количество букв
+    const word = numberWords[number];
+    if (word) {
+        const letterCount = word.replace(/\s+/g, '').length; // Убираем пробелы
+        alert(letterCount); // Показываем результат
+    } else {
+        alert("Неизвестное число");
+    }
+}
+
+countLettersInNumberWord(9);  // Запуск для числа 9
+  </script>
+
+  <p>...После скрипта.</p>
+
+</body>
+
+</html>
