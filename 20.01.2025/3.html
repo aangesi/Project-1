@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+
+<body>
+
+  <p>Перед скриптом...</p>
+
+  <script>
+function findMinimumWeighings(targetWeight) {
+    let weighings = 0;
+    while (targetWeight > 0) {
+        // Для каждого взвешивания проверяем, можно ли отнять 1 грамм
+        targetWeight = Math.floor(targetWeight / 2);
+        weighings++;
+    }
+    return weighings;
+}
+
+// Пример: нахождение минимального количества взвешиваний для 1000 граммов
+let targetWeight = 1000; // 1 кг = 1000 граммов
+let result = findMinimumWeighings(targetWeight);
+
+alert("Минимальное количество взвешиваний для отмеривания 1 кг риса: " + result);
+  </script>
+
+  <p>...После скрипта.</p>
+
+</body>
+
+</html>
