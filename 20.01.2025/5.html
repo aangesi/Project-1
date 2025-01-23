@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+
+<body>
+
+  <p>Перед скриптом...</p>
+
+  <script>
+function calc(a, b) {
+  if (a === 0 || b === 0) {
+    alert("Операция невозможна");
+    return "Операция невозможна";
+  }
+  if (a % 2 === 0 && b % 2 === 0) {
+    const result = a + b; // Оба числа четные, возвращаем сумму
+    alert(result);
+    return result;
+  }
+  const result = a - b; // Хотя бы одно число нечетное, возвращаем разность
+  alert(result);
+  return result;
+}
+
+// Примеры запуска:
+calc(4, 6); // Выведет: 10
+calc(3, 5); // Выведет: -2
+calc(0, 5); // Выведет: Операция невозможна
+  </script>
+
+  <p>...После скрипта.</p>
+
+</body>
+
+</html>
