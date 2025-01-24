@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+
+<body>
+
+  <script>
+function buildPyramid(height) {
+    let pyramid = '';
+    for (let i = 1; i <= height; i++) {
+        let row = '';
+        for (let j = 1; j <= i; j++) {
+            row += j;
+        }
+        pyramid += row + '\n'; // Добавляем строку к пирамиде
+    }
+    alert(pyramid); // Выводим пирамиду в модальном окне
+}
+
+// Пример вызова
+let height = parseInt(prompt("Введите высоту пирамиды:")); // Запрашиваем высоту у пользователя
+if (!isNaN(height) && height > 0) {
+    buildPyramid(height);
+} else {
+    alert("Введите корректное число!");
+}
+  </script>
+
+</body>
+
+</html>
