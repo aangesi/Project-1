@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import './App.css'; // Для стилизации
-
 
 function App() {
   const [coins, setCoins] = useState(0);
@@ -68,56 +66,165 @@ function App() {
   }, [autoMining]);
 
   return (
-    <div style={{ textAlign: "center", padding: "20px", position: 'relative' }}>
-      <h1>Кликер с улучшениями</h1>
-      <div style={{ position: "absolute", left: "20px", top: "20px", fontSize: "20px" }}>
-        Монеты: {coins} <br />
-        Автодобыча: {autoMining} монет/сек
+    <div style={containerStyles}>
+      {/* Header */}
+      <h1 style={headerStyles}>Кликер с улучшениями</h1>
+      
+      <div style={statusStyles}>
+        <strong>Монеты:</strong> {coins} <br />
+        <strong>Автодобыча:</strong> {autoMining} монет/сек
       </div>
-      <div style={{ position: "absolute", right: "20px", top: "20px" }}>
-        <button
-          onClick={() => setShowUpgradeDialog(true)}
-          style={{ padding: "10px 20px", fontSize: "16px", backgroundColor: "#ff9800", color: "white", border: "none", cursor: "pointer", borderRadius: "10px" }}
-        >
-          Улучшения
-        </button>
-      </div>
-      <div style={{ marginTop: "20px" }}>
+      
+      {/* Main Mining Button */}
+      <div style={buttonContainerStyles}>
         <button
           onClick={handleClick}
-          style={{ padding: "20px 40px", fontSize: "24px", backgroundColor: "#4CAF50", color: "white", border: "none", cursor: "pointer", borderRadius: "10px" }}
+          style={miningButtonStyles}
         >
           Добыть монету
         </button>
       </div>
 
-      {/* Модальное окно для улучшений */}
+      {/* Upgrade Button */}
+      <div style={upgradeButtonContainerStyles}>
+        <button
+          onClick={() => setShowUpgradeDialog(true)}
+          style={upgradeButtonStyles}
+        >
+          Улучшения
+        </button>
+      </div>
+
+      {/* Modal for Upgrades */}
       {showUpgradeDialog && (
-        <div className="modal">
-          <div className="modal-content">
-            <button onClick={() => setShowUpgradeDialog(false)} style={{ fontSize: '18px', color: 'white', backgroundColor: 'red', padding: '10px' }}>Закрыть</button>
-            <h2>Улучшения</h2>
-            <button onClick={improveClick} style={{ padding: "10px 20px", backgroundColor: "#ff9800", color: "white", border: "none", cursor: "pointer", borderRadius: "10px", marginTop: "10px" }}>
+        <div className="modal" style={modalStyles}>
+          <div className="modal-content" style={modalContentStyles}>
+            <button onClick={() => setShowUpgradeDialog(false)} style={closeButtonStyles}>Закрыть</button>
+            <h2 style={{ color: "#333", fontSize: "28px", marginBottom: "20px" }}>Улучшения</h2>
+            <button onClick={improveClick} style={upgradeButtonStyles}>
               Улучшить клик ({clickUpgradeCost} монет)
             </button>
-            <button onClick={improveAutoMining} style={{ padding: "10px 20px", backgroundColor: "#ff9800", color: "white", border: "none", cursor: "pointer", borderRadius: "10px", marginTop: "10px" }}>
+            <button onClick={improveAutoMining} style={upgradeButtonStyles}>
               Улучшить автодобычу ({autoMiningUpgradeCost} монет)
             </button>
-            <button onClick={improveEnvironment} style={{ padding: "10px 20px", backgroundColor: "#ff9800", color: "white", border: "none", cursor: "pointer", borderRadius: "10px", marginTop: "10px" }}>
+            <button onClick={improveEnvironment} style={upgradeButtonStyles}>
               Улучшить окружение ({environmentUpgradeCost} монет)
             </button>
           </div>
         </div>
       )}
 
-      {/* Окружение */}
-      <div className="background">
-        {background.map((item, index) => (
-          <img key={index} src={`/${item}.background.png`} alt={item} style={{ width: '100px', position: 'absolute', bottom: `${index * 30}px`, left: `${index * 100}px` }} />
-        ))}
-      </div>
+      {/* Background */}
+      <div className="background" style={backgroundStyles}></div>
     </div>
   );
 }
+
+// Container style to center everything
+const containerStyles = {
+  fontFamily: "Arial, sans-serif",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  textAlign: "center",
+  height: "100vh",
+  background: "#ececec",
+  padding: "20px",
+  position: "relative",
+};
+
+// Header styles
+const headerStyles = {
+  fontSize: "36px",
+  color: "#333",
+  marginBottom: "20px",
+};
+
+// Status section styles
+const statusStyles = {
+  fontSize: "18px",
+  color: "#555",
+  marginBottom: "40px",
+};
+
+// Button container styles
+const buttonContainerStyles = {
+  marginBottom: "30px",
+};
+
+// Mining button styles
+const miningButtonStyles = {
+  padding: "18px 40px",
+  fontSize: "24px",
+  backgroundColor: "#4CAF50",
+  color: "white",
+  border: "none",
+  cursor: "pointer",
+  borderRadius: "10px",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+};
+
+// Upgrade button container styles
+const upgradeButtonContainerStyles = {
+  marginTop: "20px",
+};
+
+// Upgrade button styles
+const upgradeButtonStyles = {
+  padding: "12px 25px",
+  fontSize: "16px",
+  backgroundColor: "#ff6200",
+  color: "white",
+  border: "none",
+  cursor: "pointer",
+  borderRadius: "10px",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+};
+
+// Modal styles
+const modalStyles = {
+  position: "fixed",
+  top: "0",
+  left: "0",
+  right: "0",
+  bottom: "0",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  background: "rgba(0, 0, 0, 0.7)",
+  zIndex: "9999",
+};
+
+const modalContentStyles = {
+  background: "#fff",
+  padding: "30px",
+  borderRadius: "12px",
+  textAlign: "center",
+  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+  maxWidth: "400px",
+  width: "100%",
+};
+
+const closeButtonStyles = {
+  backgroundColor: "red",
+  color: "white",
+  padding: "12px 20px",
+  fontSize: "18px",
+  border: "none",
+  borderRadius: "8px",
+  cursor: "pointer",
+  marginBottom: "20px",
+};
+
+const backgroundStyles = {
+  position: "absolute",
+  top: "0",
+  left: "0",
+  right: "0",
+  bottom: "0",
+  background: "url('/forest.background.png') center/cover no-repeat",
+  zIndex: -1,
+};
 
 export default App;
