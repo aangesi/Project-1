@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 const ShapeNinja = () => {
   const canvasRef = useRef(null);
   const [shapes, setShapes] = useState([]);
+  const [score, setScore] = useState(0); // Добавляем состояние для счета
 
   // Генерация случайного цвета
   const getRandomColor = () => {
@@ -60,6 +61,12 @@ const ShapeNinja = () => {
           y: shape.y + shape.vy,
         }));
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Отрисовка счетчика
+        ctx.fillStyle = 'black';
+        ctx.font = '20px Arial';
+      
+
         newShapes.forEach(drawShape);
         return newShapes;
       });
@@ -110,8 +117,11 @@ const ShapeNinja = () => {
     const { offsetX, offsetY } = e.nativeEvent;
     setShapes((prevShapes) => {
       const newShapes = [];
+      let cutCount = 0; // Подсчитываем разрезанные фигуры
+
       prevShapes.forEach((shape) => {
         if (hitTest(shape, offsetX, offsetY)) {
+          cutCount += 1;
           const angle = Math.random() * 2 * Math.PI;
           const speed = 3;
 
@@ -143,12 +153,18 @@ const ShapeNinja = () => {
           newShapes.push(shape);
         }
       });
+
+      // Увеличиваем счетчик при разрезании
+      setScore((prevScore) => prevScore + cutCount);
       return newShapes;
     });
   };
 
   return (
-    <canvas ref={canvasRef} width={800} height={600} onMouseMove={handleCut} style={{ background: 'white', border: '1px solid #ccc' }} />
+    <div>
+      <h2 style={{ textAlign: 'center' }}>Счет: {score}</h2>
+      <canvas ref={canvasRef} width={800} height={600} onMouseMove={handleCut} style={{ background: 'white', border: '1px solid #ccc' }} />
+    </div>
   );
 };
 
