@@ -4,7 +4,7 @@ const ShapeNinja = () => {
   const canvasRef = useRef(null);
   const [shapes, setShapes] = useState([]);
 
-  // Функция для генерации случайного цвета в формате HEX.
+  // Генерация случайного цвета
   const getRandomColor = () => {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -18,17 +18,12 @@ const ShapeNinja = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    // Функция для отрисовки фигуры с учетом её типа и цвета.
+    // Функция отрисовки фигуры
     const drawShape = (shape) => {
       ctx.beginPath();
       switch (shape.type) {
         case 'rectangle':
-          ctx.rect(
-            shape.x - shape.size / 2,
-            shape.y - shape.size / 2,
-            shape.size,
-            shape.size
-          );
+          ctx.rect(shape.x - shape.size / 2, shape.y - shape.size / 2, shape.size, shape.size);
           break;
         case 'circle':
           ctx.arc(shape.x, shape.y, shape.size / 2, 0, 2 * Math.PI);
@@ -49,43 +44,6 @@ const ShapeNinja = () => {
           ctx.closePath();
           break;
         }
-        case 'pentagon': {
-          const sides = 5;
-          const r = shape.size / 2;
-          const startAngle = -Math.PI / 2;
-          for (let i = 0; i < sides; i++) {
-            const angle = startAngle + (2 * Math.PI * i) / sides;
-            const x = shape.x + r * Math.cos(angle);
-            const y = shape.y + r * Math.sin(angle);
-            if (i === 0) {
-              ctx.moveTo(x, y);
-            } else {
-              ctx.lineTo(x, y);
-            }
-          }
-          ctx.closePath();
-          break;
-        }
-        case 'star': {
-          const points = 5;
-          const outerRadius = shape.size / 2;
-          const innerRadius = outerRadius / 2;
-          const step = Math.PI / points;
-          let angle = -Math.PI / 2;
-          for (let i = 0; i < 2 * points; i++) {
-            const r = i % 2 === 0 ? outerRadius : innerRadius;
-            const x = shape.x + r * Math.cos(angle);
-            const y = shape.y + r * Math.sin(angle);
-            if (i === 0) {
-              ctx.moveTo(x, y);
-            } else {
-              ctx.lineTo(x, y);
-            }
-            angle += step;
-          }
-          ctx.closePath();
-          break;
-        }
         default:
           break;
       }
@@ -93,7 +51,7 @@ const ShapeNinja = () => {
       ctx.fill();
     };
 
-    // Функция обновления позиций фигур и перерисовки канвы.
+    // Обновление анимации
     const update = () => {
       setShapes((prevShapes) => {
         const newShapes = prevShapes.map((shape) => ({
@@ -101,18 +59,16 @@ const ShapeNinja = () => {
           x: shape.x + shape.vx,
           y: shape.y + shape.vy,
         }));
-        // Очистка канвы и заливка белым фоном.
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         newShapes.forEach(drawShape);
         return newShapes;
       });
       requestAnimationFrame(update);
     };
 
-    // Функция создания новой фигуры с случайным типом и цветом.
+    // Создание фигуры
     const spawnShape = () => {
-      const types = ['rectangle', 'circle', 'triangle', 'pentagon', 'star'];
+      const types = ['rectangle', 'circle', 'triangle'];
       const type = types[Math.floor(Math.random() * types.length)];
       setShapes((prev) => [
         ...prev,
@@ -137,8 +93,7 @@ const ShapeNinja = () => {
     };
   }, []);
 
-  // Функция проверки попадания курсора в фигуру.
-  // Для круга точная проверка по расстоянию, для остальных — по квадрату, охватывающему фигуру.
+  // Проверка попадания курсора в фигуру
   const hitTest = (shape, mouseX, mouseY) => {
     const half = shape.size / 2;
     if (shape.type === 'circle') {
@@ -146,38 +101,54 @@ const ShapeNinja = () => {
       const dy = mouseY - shape.y;
       return dx * dx + dy * dy <= half * half;
     } else {
-      return (
-        mouseX > shape.x - half &&
-        mouseX < shape.x + half &&
-        mouseY > shape.y - half &&
-        mouseY < shape.y + half
-      );
+      return mouseX > shape.x - half && mouseX < shape.x + half && mouseY > shape.y - half && mouseY < shape.y + half;
     }
   };
 
-  // При движении мыши проверяем попадание по фигурам и "разрезаем" их, если размер достаточно велик.
+  // Разрезание фигуры на две половинки
   const handleCut = (e) => {
     const { offsetX, offsetY } = e.nativeEvent;
-    setShapes((prevShapes) =>
-      prevShapes.flatMap((shape) =>
-        hitTest(shape, offsetX, offsetY) && shape.size > 20
-          ? [
-              { ...shape, size: shape.size / 2, x: shape.x - 10 },
-              { ...shape, size: shape.size / 2, x: shape.x + 10 },
-            ]
-          : shape
-      )
-    );
+    setShapes((prevShapes) => {
+      const newShapes = [];
+      prevShapes.forEach((shape) => {
+        if (hitTest(shape, offsetX, offsetY)) {
+          const angle = Math.random() * 2 * Math.PI;
+          const speed = 3;
+
+          // Две половинки разлетаются в разные стороны
+          const shape1 = {
+            ...shape,
+            id: Date.now() + Math.random(),
+            size: shape.size / 1.5,
+            x: shape.x - 10,
+            y: shape.y - 10,
+            vx: speed * Math.cos(angle),
+            vy: speed * Math.sin(angle),
+            color: getRandomColor(),
+          };
+
+          const shape2 = {
+            ...shape,
+            id: Date.now() + Math.random(),
+            size: shape.size / 1.5,
+            x: shape.x + 10,
+            y: shape.y + 10,
+            vx: -speed * Math.cos(angle),
+            vy: -speed * Math.sin(angle),
+            color: getRandomColor(),
+          };
+
+          newShapes.push(shape1, shape2);
+        } else {
+          newShapes.push(shape);
+        }
+      });
+      return newShapes;
+    });
   };
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={800}
-      height={600}
-      onMouseMove={handleCut}
-      style={{ background: 'white', border: '1px solid #ccc' }}
-    />
+    <canvas ref={canvasRef} width={800} height={600} onMouseMove={handleCut} style={{ background: 'white', border: '1px solid #ccc' }} />
   );
 };
 
